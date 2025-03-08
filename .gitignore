@@ -1,5 +1,6 @@
 hyle/db/
 hyle/target/
-.vscode/
 jwt_public_key.pem
 .env
+frontend/node_modules/
+frontend/dist/
