@@ -11,7 +11,7 @@ docker run -p 5000:8080 -e KC_BOOTSTRAP_ADMIN_USERNAME=admin -e KC_BOOTSTRAP_ADM
 Then reate a new realm by running python script:
 
 ```sh
-python seed_dev.py
+python keycloak/seed_dev.py
 ```
 
 Store the public key (will be hardcoded in the contract, needs to be updated each time a new realm is used).
