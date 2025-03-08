@@ -22,7 +22,8 @@ function App() {
   if (auth.isAuthenticated) {
     return (
       <div>
-        Hello {auth.user?.profile.sub}{" "}
+        Hello {auth.user?.profile.name} ,
+        <pre>{JSON.stringify(auth.user, null, 2)}</pre>
         <Button onClick={() => void auth.removeUser()}>Log out</Button>
       </div>
     );
