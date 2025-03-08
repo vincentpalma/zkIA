@@ -145,9 +145,9 @@ print(
     + "\n-----END PUBLIC KEY-----"
 )
 
-# with open("jwt_public_key.pem", "w") as f:
-#     f.write(
-#         "-----BEGIN PUBLIC KEY-----\n"
-#         + resp.json()["public_key"]
-#         + "\n-----END PUBLIC KEY-----"
-#     )
+with open("jwt_public_key.pem", "w") as f:
+    f.write(
+        "-----BEGIN PUBLIC KEY-----\n"
+        + resp.json()["public_key"]
+        + "\n-----END PUBLIC KEY-----"
+    )

@@ -1,3 +1,4 @@
 hyle/db/
 hyle/target/
 .vscode/
+jwt_public_key.pem
