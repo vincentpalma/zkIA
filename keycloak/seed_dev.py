@@ -151,3 +151,41 @@ with open("jwt_public_key.pem", "w") as f:
         + resp.json()["public_key"]
         + "\n-----END PUBLIC KEY-----"
     )
+
+# Add Google provider
+with open(".env", "r") as f:
+    lines = f.readlines()
+
+for line in lines:
+    if line.startswith("GOOGLE_CLIENT_ID="):
+        client_id = line.split("=")[1]
+    elif line.startswith("GOOGLE_CLIENT_SECRET="):
+        client_secret = line.split("=")[1]
+
+if not client_id or not client_secret:
+    print("No Google client id or secret in .env file.")
+else:
+    print("Using client_id:", client_id)
+    print("Using client_secret:", client_secret)
+
+    google_settings = {
+        "alias": "google",
+        "displayName": "",
+        "config": {
+            "clientId": client_id,
+            "clientSecret": client_secret,
+            "guiOrder": "",
+            "prompt": "",
+            "hostedDomain": "",
+        },
+        "providerId": "google",
+    }
+
+    resp = requests.post(
+        # /admin/realms/hyle/identity-provider/instances
+        f"{keycloak_root}/admin/realms/{realm}/identity-provider/instances",
+        json=google_settings,
+        headers=auth_headers,
+    )
+
+    print("Google provider added successfully.")
