@@ -68,9 +68,9 @@ export function ZkIA() {
 
     const identity = values.username + "." + "simple_identity";
     let password =
-      action == "register"
+      action == "register" || action == "verify"
         ? auth.user?.access_token
-        : values.password + " " + auth.user?.access_token; // convention from contract (if action is "linkPassword", format is "password jwt")
+        : values.password + "|" + auth.user?.access_token; // convention from contract (if action is "linkPassword", format is "password|jwt")
 
     if (DEBUG_WITH_SIMPLE_IDENTITY) {
       password = values.password;
@@ -78,18 +78,21 @@ export function ZkIA() {
 
     setIsLoading(true);
 
-    const res = await fetch(`${PROVER_API_URL}/${action}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        host: PROVER_API_URL,
-        identity: identity,
-        password: password,
-        transferAmount: values.transferAmount,
-        transferRecipient: values.transferRecipient,
-        method: action,
-      }),
-    });
+    const res = await fetch(
+      `${PROVER_API_URL}/${action === "linkPassword" ? "register" : action}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          host: PROVER_API_URL,
+          identity: identity,
+          password: password,
+          transferAmount: values.transferAmount,
+          transferRecipient: values.transferRecipient,
+          method: action,
+        }),
+      }
+    );
 
     setIsLoading(false);
 

@@ -26,11 +26,6 @@ def register_identity():
     if DEBUG_WITH_SIMPLE_IDENTITY:
         method = ""
 
-    print("ASDASDASD")
-    print(
-        f"RISC0_DEV_MODE=1 cargo run -- register-identity {identity} {password} {method}"
-    )
-
     result = subprocess.check_output(
         f"RISC0_DEV_MODE=1 cargo run -- register-identity {identity} {password} {method}",
         shell=True,
@@ -46,9 +41,15 @@ def verify_identity():
     identity = request.json["identity"]
     password = request.json["password"]
     nonce = request.json["nonce"] if "nonce" in request.json else 0
+    method = request.json["method"] if "method" in request.json else "email"
+
+    method = "email" if method == "verify" else "password"
+
+    if DEBUG_WITH_SIMPLE_IDENTITY:
+        method = ""
 
     result = subprocess.check_output(
-        f"RISC0_DEV_MODE=1 cargo run -- verify-identity {identity} {password} {nonce}",
+        f"RISC0_DEV_MODE=1 cargo run -- verify-identity {identity} {password} {nonce} {method}",
         shell=True,
         cwd=SIMPLE_IDENTITY_PATH,
     )
