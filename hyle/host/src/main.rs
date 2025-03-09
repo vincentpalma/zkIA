@@ -50,6 +50,7 @@ enum Commands {
         identity: String,
         password: String,
         nonce: u32,
+        method: IdentificationMethods,
     },
 }
 
@@ -185,8 +186,16 @@ async fn main() {
             identity,
             password,
             nonce,
+            method
         } => {
             {
+                let ia = match method.as_str() {
+                    "email" => IdentificationMethods::Email,
+                    "password" => IdentificationMethods::Password,
+                    _ => IdentificationMethods::Email,
+                };
+
+
                 // Fetch the initial state from the node
                 let initial_state: IdentityContractState = client
                     .get_contract(&contract_name.clone().into())
@@ -198,10 +207,13 @@ async fn main() {
                 // Build the blob transaction
                 // ----
 
-                let action = sdk::identity_provider::IdentityAction::VerifyIdentity {
+                let action = IdentityAction::VerifyIdentity {
+                    identification_method: ia,
                     account: identity.clone(),
-                    nonce,
+                    nonce: 0,
+                    context: OpenIdContext {issuer: "provider".to_string(), audience: "audience".to_string()}
                 };
+
                 let blobs = vec![sdk::Blob {
                     contract_name: contract_name.clone().into(),
                     data: sdk::BlobData(borsh::to_vec(&action).expect("failed to encode BlobData")),

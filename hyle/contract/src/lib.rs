@@ -320,6 +320,7 @@ impl Digestable for IdentityContractState {
         sdk::StateDigest(borsh::to_vec(&self).expect("Failed to encode Balances"))
     }
 }
+
 impl From<sdk::StateDigest> for IdentityContractState {
     fn from(state: sdk::StateDigest) -> Self {
         borsh::from_slice(&state.0)
