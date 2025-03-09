@@ -140,7 +140,7 @@ async fn main() {
             let action = IdentityAction::RegisterIdentity { 
                 identification_method: ia, 
                 account: identity.clone(),
-                context: OpenIdContext {issuer: "provider".to_string(), audience: "audience".to_string()}
+                context: OpenIdContext {issuer: "issuer".to_string(), audience: "audience".to_string()}
             };
 
             let blobs = vec![sdk::Blob {
@@ -211,7 +211,7 @@ async fn main() {
                     identification_method: ia,
                     account: identity.clone(),
                     nonce: 0,
-                    context: OpenIdContext {issuer: "provider".to_string(), audience: "audience".to_string()}
+                    context: OpenIdContext {issuer: "isuuer".to_string(), audience: "audience".to_string()}
                 };
 
                 let blobs = vec![sdk::Blob {

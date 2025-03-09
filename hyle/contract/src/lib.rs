@@ -9,10 +9,6 @@ use alloc::vec;
 
 pub mod jwt;
 
-// const PROVIDER_PUBLIC_KEY: JwkPublicKey = JwkPublicKey {
-//     n: String::from("asdf"),
-//     e: String::from("asdf"),
-// };
 
 impl HyleContract for IdentityContractState {
     /// Entry point of the contract's logic
@@ -29,10 +25,6 @@ impl HyleContract for IdentityContractState {
         self.execute_action(ctx, action, password)
     }
 }
-
-
-
-
 
 /// Struct to hold account's information
 #[derive(BorshSerialize, BorshDeserialize, Serialize, Deserialize, Debug, Clone, Eq, PartialEq)]
