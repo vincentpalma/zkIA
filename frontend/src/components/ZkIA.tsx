@@ -70,7 +70,7 @@ export function ZkIA() {
     let password =
       action == "register" || action == "verify"
         ? auth.user?.access_token
-        : values.password + "-" + auth.user?.access_token; // convention from contract (if action is "linkPassword", format is "password-jwt") // FIXME: shitty convention
+        : values.password + "¬" + auth.user?.access_token; // convention from contract (if action is "linkPassword", format is "password¬jwt") // FIXME: very shitty convention
 
     if (DEBUG_WITH_SIMPLE_IDENTITY) {
       password = values.password;
