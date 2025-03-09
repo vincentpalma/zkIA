@@ -1,4 +1,4 @@
-# zkIA (new name idea needed)
+# zkIA 
 
 Building a system on Hyle using zkAI (zk Advanced Identity) and RiscZero to enable secure payments by sending funds to an email, allowing recipients to verify their identity and later transition to any other sort of identity management, like password, passkey or Metamask account for fund management.
 
