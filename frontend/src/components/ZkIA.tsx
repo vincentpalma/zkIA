@@ -17,6 +17,7 @@ import { PROVER_API_URL } from "@/App";
 import { useState } from "react";
 
 import { toast } from "sonner";
+import { useAuth } from "react-oidc-context";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -34,9 +35,14 @@ const formSchema = z.object({
       message: "Transfer recipient must be at least 2 characters.",
     })
     .email("This is not a valid email."),
+  linkedPassword: z.string().min(5, {
+    message: "Linked password must be at least 5 characters.",
+  }),
 });
 
 export function ZkIA() {
+  const auth = useAuth();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -44,13 +50,14 @@ export function ZkIA() {
       password: "",
       transferAmount: 1,
       transferRecipient: "none@gmail.com",
+      linkedPassword: "nopassword",
     },
   });
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [action, setAction] = useState<"register" | "verify" | "transfer">(
-    "register"
-  );
+  const [action, setAction] = useState<
+    "register" | "verify" | "transfer" | "linkPassword"
+  >("register");
 
   const [registeredUser, setRegisteredUser] = useState<string>("");
 
@@ -58,6 +65,11 @@ export function ZkIA() {
     console.log("submit", action);
 
     const identity = values.username + "." + "simple_identity";
+    // const password = values.password;// for simple token
+    const password =
+      action == "register"
+        ? auth.user?.access_token
+        : values.password + " " + auth.user?.access_token; // convention from contract (if action is "linkPassword", format is "password jwt")
 
     setIsLoading(true);
 
@@ -67,9 +79,10 @@ export function ZkIA() {
       body: JSON.stringify({
         host: PROVER_API_URL,
         identity: identity,
-        password: values.password,
+        password: password,
         transferAmount: values.transferAmount,
         transferRecipient: values.transferRecipient,
+        method: action,
       }),
     });
 
@@ -176,7 +189,33 @@ export function ZkIA() {
             disabled={isLoading || registeredUser == ""}
             onClick={() => setAction("transfer")}
           >
-            {isLoading ? "Proving..." : "transfer"}
+            {isLoading ? "Proving..." : "Transfer"}
+          </Button>
+
+          <FormField
+            control={form.control}
+            name="linkedPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Add a password to identity</FormLabel>
+                <FormControl>
+                  <Input
+                    type="password"
+                    placeholder="••••••••"
+                    {...field}
+                    disabled={registeredUser == ""}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button
+            type="submit"
+            disabled={isLoading || registeredUser == ""}
+            onClick={() => setAction("linkPassword")}
+          >
+            {isLoading ? "Proving..." : "Link password"}
           </Button>
         </form>
       </Form>

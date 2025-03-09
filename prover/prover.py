@@ -10,7 +10,14 @@ app.config["CORS_HEADERS"] = "Content-Type"
 #     "/home/vince/Documents/crypto/hackathon_bsa/examples/simple-identity"
 # )
 
-SIMPLE_IDENTITY_PATH = "/home/vince/Documents/crypto/hackathon_bsa/zkIA/hyle"
+DEBUG_WITH_SIMPLE_IDENTITY = True
+
+if not DEBUG_WITH_SIMPLE_IDENTITY:
+    SIMPLE_IDENTITY_PATH = "/home/vince/Documents/crypto/hackathon_bsa/zkIA/hyle"
+else:
+    SIMPLE_IDENTITY_PATH = (
+        "/home/vince/Documents/crypto/hackathon_bsa/examples/simple-identity"
+    )
 
 SIMPLE_TOKEN_PATH = "/home/vince/Documents/crypto/hackathon_bsa/examples/simple-token"
 
@@ -20,6 +27,9 @@ def register_identity():
     identity = request.json["identity"]
     password = request.json["password"]
     method = request.json["method"] if "method" in request.json else "email"
+
+    if DEBUG_WITH_SIMPLE_IDENTITY:
+        method = ""
 
     result = subprocess.check_output(
         f"RISC0_DEV_MODE=1 cargo run -- register-identity {identity} {password} {method}",
@@ -49,7 +59,7 @@ def verify_identity():
 
 @app.route("/transfer", methods=["POST"])
 def transfer():
-    sender_identity = "faucet.simple_token"  # TODO: get alice identity
+    sender_identity = "faucet.simple_token"  # TODO: get alice signature as parameter
     transfer_amount = request.json["transferAmount"]
     transfer_recipient = request.json["transferRecipient"]
 

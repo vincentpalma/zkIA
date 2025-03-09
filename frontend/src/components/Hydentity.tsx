@@ -12,10 +12,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  hydentityContractName,
-  // registerIdentity,
-} from "@/hyle-js/src/model/hydentity";
+// import {
+//   hydentityContractName,
+//   // registerIdentity,
+// } from "@/hyle-js/src/model/hydentity";
 import { PROVER_API_URL } from "@/App";
 import { useState } from "react";
 // import { BlobTransaction, ProofTransaction } from "@/hyle-js/src/model";
