@@ -1,8 +1,6 @@
-# Simple Identity risc0 example
+# Simple Token transfer risc0 example
 
-On Hylé, any smart contract can serve as proof of identity. This flexibility allows you to register your preferred identity source as a smart contract for account identification. Hylé also ships [a native `hydentity` contract](https://github.com/Hyle-org/hyle/tree/main/contracts/hydentity) for simplicity.
-
-This is a Risc0 example called simple_identity.
+Welcome to the simple_token Risc0 example.
 
 ## Prerequisites
 
@@ -12,49 +10,37 @@ This is a Risc0 example called simple_identity.
 
 ## Quickstart
 
-### Build and register the identity contract
+### Build and register the contract
 
 To build all methods and register the smart contract on the local node [from the source](https://github.com/Hyle-org/examples/blob/simple_erc20/simple-token/host/src/main.rs), run:
 
 ```bash
-cargo run -- register-contract
+cargo run -- register 1000
 ```
 
-The expected output is `📝 Registering new contract simple_identity`.
+The expected output is `📝 Registering new contract simple_token`.
 
-### Register an account / Sign up
+### Transfer tokens
 
-To register an account with a username (`alice`) and password (`abc123`), execute:
-
-```sh
-cargo run -- register-identity alice.simple_identity abc123
-```
-
-The node's logs will display:
+To transfer 2 tokens from `faucet` to `Bob`:
 
 ```bash
-INFO hyle_verifiers: ✅ Risc0 proof verified.
-```
-
-### Verify identity / Login
-
-To verify `alice`'s identity:
-
-```bash
-cargo run -- verify-identity alice.simple_identity abc123 0
+cargo run -- transfer faucet.simple_token bob.simple_token 2
 ```
 
 This command will:
 
-1. Send a blob transaction to verify `alice`'s identity.
-1. Generate a ZK proof of that identity. It will only be valid once, thus the inclusion of a nonce.
-1. Send the proof to the devnet.
+1. Send a blob transaction to transfer 2 tokens from `faucet` to `bob`.
+2. Generate a ZK proof of that transfer.
+3. Send the proof to the devnet.
+
+### Verify settled state
 
 Upon reception of the proof, the node will:
 
-1. Verify the proof.
-1. Settle the blob transaction.
-1. Update the contract's state.
+1. Verify the proof
+1. Settle the blob transaction
+1. Update the contract's state
 
 The node's logs will display:
 
@@ -62,9 +48,27 @@ The node's logs will display:
 INFO hyle_verifiers: ✅ Risc0 proof verified.
 ```
 
+And on the following slot:
+
+```bash
+INFO hyle::node_state: ✨ Settled tx [...] 
+```
+
+#### Check onchain balance
+
+Verify onchain balances:
+
+```bash
+cargo run -- balance faucet.simple_token
+cargo run -- balance bob.simple_token
+```
+
+!!! note
+    In this example, we do not verify the identity of the person who initiates the transaction. We use `.simple_token` as a suffix for the "from" and "to" transfer fields: usually, we'd use the identity scheme as the suffix.
+
 ### Executing the Project Locally in Development Mode
 
-During development, faster iteration upon code changes can be achieved by leveraging [dev-mode], we strongly suggest activating it during your early development phase.
+During development, faster iteration upon code changes can be achieved by leveraging [dev-mode], we strongly suggest activating it during your early development phase. 
 
 ```bash
 RISC0_DEV_MODE=1 cargo run
@@ -101,7 +105,7 @@ applications, which we think is a good starting point for your applications.
 ```text
 project_name
 ├── Cargo.toml
-├── contract
+├── contract 
 │   ├── Cargo.toml
 │   └── src
 │       └── lib.rs         <-- [Contract code goes here, common to host & guest]
@@ -121,7 +125,6 @@ project_name
 ```
 
 <!--[bonsai access]: https://bonsai.xyz/apply-->
-
 [cargo-risczero]: https://docs.rs/cargo-risczero
 [crates]: https://github.com/risc0/risc0/blob/main/README.md#rust-binaries
 [dev-docs]: https://dev.risczero.com
