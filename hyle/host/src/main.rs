@@ -1,6 +1,7 @@
 use clap::{Parser, Subcommand};
 use client_sdk::helpers::risc0::Risc0Prover;
 use contract_identity::IdentityContractState;
+use contract_identity::IdentificationMethods;
 use sdk::api::APIRegisterContract;
 use sdk::BlobTransaction;
 use sdk::ProofTransaction;
