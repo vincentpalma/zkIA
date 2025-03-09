@@ -10,8 +10,11 @@ import { deserializeIdentityAction } from "@/hyle-js/src/model/mmid";
 import { deserializeStakingAction } from "@/hyle-js/src/model/staking";
 import { Hydentity } from "./components/Hydentity";
 
-export const node = new NodeApiHttpClient("http://127.0.0.1:4321");
-export const indexer = new IndexerApiHttpClient("http://127.0.0.1:4321");
+export const NODE_API_URL = "http://127.0.0.1:4321";
+export const PROVER_API_URL = "http://127.0.0.1:4000";
+
+export const node = new NodeApiHttpClient(NODE_API_URL);
+export const indexer = new IndexerApiHttpClient(NODE_API_URL);
 
 async function runTests() {
   const info = await node.getNodeInfo();

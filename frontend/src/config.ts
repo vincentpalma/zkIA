@@ -1,6 +1,7 @@
 //https://github.com/authts/sample-keycloak-react-oidc-context/blob/main/react/src/config.ts
 
-import { UserManager, WebStorageStateStore } from 'oidc-client-ts';
+// import { UserManager, WebStorageStateStore } from 'oidc-client-ts';
+import { UserManager } from 'oidc-client-ts';
 
 export const onSigninCallback = () => {
   window.history.replaceState({}, document.title, window.location.pathname);

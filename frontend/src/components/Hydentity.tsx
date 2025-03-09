@@ -16,10 +16,14 @@ import {
 import { Input } from "@/components/ui/input";
 import {
   hydentityContractName,
-  registerIdentity,
+  // registerIdentity,
 } from "@/hyle-js/src/model/hydentity";
-import { BlobTransaction, ProofTransaction } from "@/hyle-js/src/model";
-import { node } from "@/App";
+import { PROVER_API_URL } from "@/App";
+import { useState } from "react";
+// import { BlobTransaction, ProofTransaction } from "@/hyle-js/src/model";
+// import { node } from "@/App";
+
+import { toast } from "sonner";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -31,52 +35,74 @@ const formSchema = z.object({
 });
 
 export function Hydentity() {
-  // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: "",
+      password: "",
     },
   });
 
-  // 2. Define a submit handler.
+  const [isLoading, setIsLoading] = useState(false);
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const identity = values.username + "." + hydentityContractName;
 
-    // blob tx
-    const idBlob = registerIdentity(identity, values.password);
+    setIsLoading(true);
 
-    const blobTx: BlobTransaction = {
-      identity: identity,
-      blobs: [idBlob],
-    };
+    const res = await fetch(`${PROVER_API_URL}/registerIdentity`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        host: PROVER_API_URL,
+        contract_name: hydentityContractName,
+        identity: identity,
+        password: values.password,
+      }),
+    });
 
-    const txHash = await node.sendBlobTx(blobTx);
-    console.log("registerIdentity blob tx sent", txHash);
+    setIsLoading(false);
 
-    // proof tx
-    const proof = {
-      tx_hash: txHash,
-      contract_name: hydentityContractName,
-      identity: identity,
-      password: values.password, // TODO: this must be a private input
-    };
+    const text = await res.text();
 
-    console.log("proof", proof);
+    console.log(text);
+    toast(text);
 
-    //  // Send proof transaction
-    //   const responseProof = await fetch(`${HYLE_PROVER_URL}/prove`, {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify(proof),
-    //   });
+    /// TODO: we would do the following in a real app
 
-    // TODO: come back here after having created the backend
-    // const proofTx: ProofTransaction = {
+    // // blob tx
+    // const idBlob = registerIdentity(identity, values.password);
+
+    // const blobTx: BlobTransaction = {
+    //   identity: identity,
+    //   blobs: [idBlob],
+    // };
+
+    // const txHash = await node.sendBlobTx(blobTx);
+    // console.log("registerIdentity blob tx sent", txHash);
+
+    // // proof tx
+    // const proof = {
+    //   tx_hash: txHash,
     //   contract_name: hydentityContractName,
-    //   proof: responseProof,
-    // }
-    // node.sendProofTx()
+    //   identity: identity,
+    //   password: values.password, // TODO: this must be a private input
+    // };
+
+    // console.log("proof", proof);
+
+    // //  // Send proof transaction
+    // //   const responseProof = await fetch(`${HYLE_PROVER_URL}/prove`, {
+    // //     method: "POST",
+    // //     headers: { "Content-Type": "application/json" },
+    // //     body: JSON.stringify(proof),
+    // //   });
+
+    // // const proofTx: ProofTransaction = {
+    // //   contract_name: hydentityContractName,
+    // //   proof: responseProof,
+    // // }
+    // // node.sendProofTx()
   }
 
   return (
@@ -110,7 +136,9 @@ export function Hydentity() {
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button type="submit" disabled={isLoading}>
+          {isLoading ? "Proving..." : "Submit"}
+        </Button>
       </form>
     </Form>
   );
