@@ -192,7 +192,7 @@ impl IdentityContractState {
                 };
                 // splitting between password to set and jwt
                 // by convention we have that the first part will be the password
-                let parts: Vec<&str> = private_input.split('|').collect();
+                let parts: Vec<&str> = private_input.split('-').collect();
                 let priv_pswd = parts[0];
                 let priv_jwt = parts[1];
 
