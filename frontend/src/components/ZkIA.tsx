@@ -19,7 +19,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useAuth } from "react-oidc-context";
 
-const DEBUG_WITH_SIMPLE_TOKEN = false;
+const DEBUG_WITH_SIMPLE_IDENTITY = false;
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -72,7 +72,7 @@ export function ZkIA() {
         ? auth.user?.access_token
         : values.password + " " + auth.user?.access_token; // convention from contract (if action is "linkPassword", format is "password jwt")
 
-    if (DEBUG_WITH_SIMPLE_TOKEN) {
+    if (DEBUG_WITH_SIMPLE_IDENTITY) {
       password = values.password;
     }
 

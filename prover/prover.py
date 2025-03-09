@@ -21,8 +21,15 @@ def register_identity():
     password = request.json["password"]
     method = request.json["method"] if "method" in request.json else "email"
 
+    method = "email" if method == "register" else "password"
+
     if DEBUG_WITH_SIMPLE_IDENTITY:
         method = ""
+
+    print("ASDASDASD")
+    print(
+        f"RISC0_DEV_MODE=1 cargo run -- register-identity {identity} {password} {method}"
+    )
 
     result = subprocess.check_output(
         f"RISC0_DEV_MODE=1 cargo run -- register-identity {identity} {password} {method}",
