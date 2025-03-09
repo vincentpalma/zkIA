@@ -237,8 +237,6 @@ impl IdentityContractState {
 
         match identification_method {
             IdentificationMethods::Email => {
-                println!("account = {account}");
-                println!("identities dict = {self.identities}");
                 match self.identities.get_mut(account).unwrap().emailAccountInfo {
                     Some(ref mut stored_info) => {
                         if nonce != stored_info.nonce {
