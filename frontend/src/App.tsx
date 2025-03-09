@@ -106,8 +106,10 @@ function App() {
     return (
       <div className="p-4">
         Hello {auth.user?.profile.name} ,
-        <pre>{JSON.stringify(auth.user, null, 2)}</pre>
-        <Button onClick={() => void auth.removeUser()}>Log out</Button>
+        <pre className="text-wrap">{JSON.stringify(auth.user, null, 2)}</pre>
+        <Button onClick={() => void auth.removeUser()} className="mr-2">
+          Log out
+        </Button>
         <Button onClick={runTests}>Run Hyle tests (Debug)</Button>
         {/* <Hydentity /> */}
         <ZkIA />

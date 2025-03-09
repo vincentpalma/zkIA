@@ -7,15 +7,12 @@ cors = CORS(app)  # allow CORS for all domains on all routes
 app.config["CORS_HEADERS"] = "Content-Type"
 
 DEBUG_WITH_SIMPLE_IDENTITY = False
-
 if not DEBUG_WITH_SIMPLE_IDENTITY:
-    SIMPLE_IDENTITY_PATH = "/home/vince/Documents/crypto/hackathon_bsa/zkIA/hyle"
+    SIMPLE_IDENTITY_PATH = "./hyle"
 else:
-    SIMPLE_IDENTITY_PATH = (
-        "/home/vince/Documents/crypto/hackathon_bsa/examples/simple-identity"
-    )
+    SIMPLE_IDENTITY_PATH = "./examples/simple-identity"
 
-SIMPLE_TOKEN_PATH = "/home/vince/Documents/crypto/hackathon_bsa/examples/simple-token"
+SIMPLE_TOKEN_PATH = "./examples/simple-token"
 
 
 @app.route("/register", methods=["POST"])
