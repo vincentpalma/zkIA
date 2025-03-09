@@ -5,19 +5,21 @@ Building a system on Hyle using zkAI (zk Advanced Identity) and RiscZero to enab
 ## Step-by-step process
 
 1. User Authentication
+   
 1.1 The sender authenticates using a supported identity method (e.g., password, passkey, email, or any zkAI-supported identity).
+
 1.2 zkAI runs the identity prover using RiscZero for secure verification.
 
-2. Sending Funds
+3. Sending Funds
 2.1 The sender transfers funds to any email address.
 2.2 zkAI runs the prover on the server side (for optimization) to ensure transaction integrity.
 
-3. Recipient Registers to Claim Funds
+4. Recipient Registers to Claim Funds
 3.1 The recipient (who has no prior Hyle account) registers using their email.
 3.2 A JWT (JSON Web Token) is recorded on-chain as an initial identity.
 3.3 zkAI runs the prover (server-side) to verify the registration and enable fund access.
 
-4. Recipient Creates a Permanent Identity
+5. Recipient Creates a Permanent Identity
 4.1 The recipient registers a new identity, such as a username and password.
 4.2 They can now access and manage the funds tied to their email using their password, eliminating the need for JWT-based authentication.
 
