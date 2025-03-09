@@ -2,6 +2,8 @@ use clap::{Parser, Subcommand};
 use client_sdk::helpers::risc0::Risc0Prover;
 use contract_identity::IdentityContractState;
 use contract_identity::IdentificationMethods;
+use contract_identity::IdentityAction;
+use contract_identity;
 use sdk::api::APIRegisterContract;
 use sdk::BlobTransaction;
 use sdk::ProofTransaction;
@@ -75,7 +77,7 @@ async fn main() {
 
             println!("✅ Register contract tx sent. Tx hash: {}", res);
         }
-        Commands::RegisterIdentity { identity, password } => {
+        Commands::RegisterIdentity { identity, password} => {
             // Fetch the initial state from the node
             let initial_state: IdentityContractState = client
                 .get_contract(&contract_name.clone().into())
@@ -90,9 +92,13 @@ async fn main() {
             // Build the blob transaction
             // ----
 
-            let action = sdk::identity_provider::IdentityAction::RegisterIdentity {
-                account: identity.clone(),
-            };
+            let action = IdentityAction::RegisterIdentity { 
+                identification_method: IdentificationMethods::Password, 
+                account: identity, 
+                context: (), 
+                jwk_pub_key: () };
+
+
             let blobs = vec![sdk::Blob {
                 contract_name: contract_name.clone().into(),
                 data: sdk::BlobData(borsh::to_vec(&action).expect("failed to encode BlobData")),
