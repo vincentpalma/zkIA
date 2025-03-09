@@ -59,9 +59,11 @@ Ensures consistency by checking the public data contained in the proofs to ensur
 
 3. Create a Keycloak realm and seed it with a test user: `python ./keycloak/seed_dev.py`. This will generate the JWT public key that will be hardcoded in the Hyle contract.
 
-4. Run the prover rest API on `localhost:4000`: `python ./prover/prover.py` (run `pip install -r ./prover/requirements.txt`). Additionally, this will automatically register the Hyle contract on the local node.
+4. Register the Hyle contract on the local node: `python ./register_contract.py`.
 
-5. Run the frontend on `localhost:3000`: `cd frontend && pnpm run dev`. (run `pnpm install` first if not already done).
+5. Run the prover rest API on `localhost:4000`: `python ./prover/prover.py` (run `pip install -r ./prover/requirements.txt`).
+
+6. Run the frontend on `localhost:3000`: `cd frontend && pnpm run dev`. (run `pnpm install` first if not already done).
 
 ## References
 

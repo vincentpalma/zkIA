@@ -101,7 +101,7 @@ applications, which we think is a good starting point for your applications.
 ```text
 project_name
 ├── Cargo.toml
-├── contract 
+├── contract
 │   ├── Cargo.toml
 │   └── src
 │       └── lib.rs         <-- [Contract code goes here, common to host & guest]
@@ -121,6 +121,7 @@ project_name
 ```
 
 <!--[bonsai access]: https://bonsai.xyz/apply-->
+
 [cargo-risczero]: https://docs.rs/cargo-risczero
 [crates]: https://github.com/risc0/risc0/blob/main/README.md#rust-binaries
 [dev-docs]: https://dev.risczero.com

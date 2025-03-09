@@ -8,7 +8,8 @@ import { APIBlob } from "@/hyle-js/src/model";
 import { deserializeAmmAction } from "@/hyle-js/src/model/amm";
 import { deserializeIdentityAction } from "@/hyle-js/src/model/mmid";
 import { deserializeStakingAction } from "@/hyle-js/src/model/staking";
-import { Hydentity } from "./components/Hydentity";
+// import { Hydentity } from "./components/Hydentity";
+import { ZkIA } from "./components/ZkIA";
 
 export const NODE_API_URL = "http://127.0.0.1:4321";
 export const PROVER_API_URL = "http://127.0.0.1:4000";
@@ -108,7 +109,8 @@ function App() {
         <pre>{JSON.stringify(auth.user, null, 2)}</pre>
         <Button onClick={() => void auth.removeUser()}>Log out</Button>
         <Button onClick={runTests}>Run Hyle tests (Debug)</Button>
-        <Hydentity />
+        {/* <Hydentity /> */}
+        <ZkIA />
       </div>
     );
   }
@@ -117,45 +119,3 @@ function App() {
 }
 
 export default App;
-
-// TODO: make the following work (automatic sign in)
-
-// import React from "react";
-// import { useAuth, hasAuthParams } from "react-oidc-context";
-// import { Button } from "@/components/ui/button";
-
-// function App() {
-//   // return (
-//   //   <div className="flex flex-col items-center justify-center min-h-svh">
-//   //     <Button>Click me</Button>
-//   //   </div>
-//   // )
-//   const auth = useAuth();
-//   const [hasTriedSignin, setHasTriedSignin] = React.useState(false);
-
-//   // automatically sign-in
-//   React.useEffect(() => {
-//     if (
-//       !hasAuthParams() &&
-//       !auth.isAuthenticated &&
-//       !auth.activeNavigator &&
-//       !auth.isLoading &&
-//       !hasTriedSignin
-//     ) {
-//       auth.signinRedirect();
-//       setHasTriedSignin(true);
-//     }
-//   }, [auth, hasTriedSignin]);
-
-//   if (auth.isLoading) {
-//     return <div>Signing you in/out...</div>;
-//   }
-
-//   if (!auth.isAuthenticated) {
-//     return <div>Unable to log in</div>;
-//   }
-
-//   return <Button onClick={() => void auth.removeUser()}>Log out</Button>;
-// }
-
-// export default App;
