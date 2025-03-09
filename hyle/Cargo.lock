@@ -1181,12 +1181,15 @@ checksum = "6fe2267d4ed49bc07b63801559be28c718ea06c4738b7a03c94df7386d2cde46"
 name = "host"
 version = "0.1.0"
 dependencies = [
+ "base64 0.22.1",
  "borsh",
  "clap",
  "client-sdk",
  "contract-identity",
  "hyle-contract-sdk",
  "methods-identity",
+ "openssl",
+ "rsa",
  "tokio",
  "tracing-subscriber 0.3.19",
 ]

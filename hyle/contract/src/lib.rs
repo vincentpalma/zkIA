@@ -7,7 +7,7 @@ use sha2::{Digest, Sha256};
 extern crate alloc;
 use alloc::vec;
 
-mod jwt;
+pub mod jwt;
 
 // const PROVIDER_PUBLIC_KEY: JwkPublicKey = JwkPublicKey {
 //     n: String::from("asdf"),
@@ -58,6 +58,7 @@ pub enum IdentificationMethods {
 #[derive(BorshSerialize, BorshDeserialize, Serialize, Deserialize, Debug, Clone)]
 pub struct IdentityContractState {
     identities: BTreeMap<String, AuthorizedIdentification>,
+    jwkPublicKey: JwkPublicKey,
 }
 
 // Enum representing the actions that can be performed by the IdentityVerification contract.
@@ -67,14 +68,12 @@ pub enum IdentityAction {
         identification_method: IdentificationMethods,
         account: String,
         context: OpenIdContext,
-        jwk_pub_key: JwkPublicKey,
     },
     VerifyIdentity {
         identification_method: IdentificationMethods,
         account: String,
         nonce: u32,
         context: OpenIdContext,
-        jwk_pub_key: JwkPublicKey,
     },
     GetIdentityInfo {
         account: String,
@@ -97,9 +96,8 @@ impl IdentityContractState {
             IdentityAction::RegisterIdentity {
                 account,
                 context,
-                jwk_pub_key,
                 identification_method,
-            } => match self.register_identity(&account,private_input,Some(&context), identification_method, jwk_pub_key) {
+            } => match self.register_identity(&account,private_input,Some(&context), identification_method ) {
                 Ok(()) => Ok(format!(
                     "Successfully registered identity for account: {}",
                     account
@@ -111,8 +109,7 @@ impl IdentityContractState {
                 account,
                 nonce,
                 context,
-                jwk_pub_key,
-            } => match self.verify_identity(&account, nonce,  private_input, Some(&context), identification_method, jwk_pub_key) {
+            } => match self.verify_identity(&account, nonce,  private_input, Some(&context), identification_method ) {
                 Ok(true) => Ok(format!("Identity verified for account: {}", account)),
                 Ok(false) => Err(format!(
                     "Identity verification failed for account: {}",
@@ -132,9 +129,10 @@ impl IdentityContractState {
     }
 
 
-    pub fn new() -> Self {
+    pub fn new(jwkPublicKey:JwkPublicKey) -> Self {
         IdentityContractState {
-            identities: BTreeMap::new()
+            identities: BTreeMap::new(),
+            jwkPublicKey,
         }
     }
 
@@ -161,12 +159,11 @@ impl IdentityContractState {
         private_input: &str,
         context: Option<&OpenIdContext>,
         identification_method: IdentificationMethods,
-        jwkPublicKey: JwkPublicKey,
     ) -> Result<(), &'static str> {
         match identification_method {
             IdentificationMethods::Email => {
                 let data =
-                    jwt::verify_jwt_signature(private_input, &jwkPublicKey, context.unwrap())
+                    jwt::verify_jwt_signature(private_input, &self.jwkPublicKey, context.unwrap())
                         .expect("Failed to verify JWT");
                 let sub = data.sub;
                 let issuer = data.iss;
@@ -212,7 +209,7 @@ impl IdentityContractState {
 
                 let email_account_info_clone = email_account_info.clone();
                 let email_account_info_nonce = email_account_info_clone.nonce;
-                self.verify_identity(account, email_account_info_nonce, priv_jwt, context, IdentificationMethods::Email, jwkPublicKey);
+                self.verify_identity(account, email_account_info_nonce, priv_jwt, context, IdentificationMethods::Email);
                 let id = format!("{account}:{private_input}");
                 let mut hasher = Sha256::new();
                 hasher.update(id.as_bytes());
@@ -244,7 +241,6 @@ impl IdentityContractState {
         private_input: &str,
         context: Option<&OpenIdContext>,
         identification_method: IdentificationMethods,
-        jwkPublicKey: JwkPublicKey,
     ) -> Result<bool, &'static str> {
 
         match identification_method {
@@ -256,7 +252,7 @@ impl IdentityContractState {
                             return Err("Invalid nonce");
                         }
         
-                        let data = jwt::verify_jwt_signature(private_input, &jwkPublicKey, context.unwrap())
+                        let data = jwt::verify_jwt_signature(private_input, &self.jwkPublicKey, context.unwrap())
                             .expect("Failed to verify ID token JWT");
         
                         let sub = data.sub;
@@ -312,7 +308,7 @@ impl IdentityContractState {
 
 impl Default for IdentityContractState {
     fn default() -> Self {
-        Self::new()
+        Self::new(JwkPublicKey {e:"asdf".to_string() , n: "asdf".to_string()})
     }
 }
 
