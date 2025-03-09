@@ -1,5 +1,3 @@
-"use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -43,19 +41,22 @@ export function Hydentity() {
     },
   });
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [action, setAction] = useState<"register" | "verify">("register");
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const identity = values.username + "." + hydentityContractName;
+    // const identity = values.username + "." + hydentityContractName;
+    const identity = values.username + "." + "simple_identity";
 
     setIsLoading(true);
 
-    const res = await fetch(`${PROVER_API_URL}/registerIdentity`, {
+    const res = await fetch(`${PROVER_API_URL}/${action}Identity`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         host: PROVER_API_URL,
-        contract_name: hydentityContractName,
+        // contract_name: hydentityContractName,
+        // contract_name: "simple_identity",
         identity: identity,
         password: values.password,
       }),
@@ -106,40 +107,56 @@ export function Hydentity() {
   }
 
   return (
-    <Form {...form}>
-      <h1>Register Hydentity</h1>
+    // <div className="flex flex-col items-center justify-center min-h-svh">
+    <div className="flex flex-col items-center justify-center min-h-svh">
+      <Form {...form}>
+        <h1>Hydentity</h1>
 
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input placeholder="Bob" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <Input type="password" placeholder="••••••••" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit" disabled={isLoading}>
-          {isLoading ? "Proving..." : "Submit"}
-        </Button>
-      </form>
-    </Form>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <FormField
+            control={form.control}
+            name="username"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Username</FormLabel>
+                <FormControl>
+                  <Input placeholder="Bob" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input type="password" placeholder="••••••••" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button
+            type="submit"
+            disabled={isLoading}
+            className="mr-2"
+            onClick={() => setAction("register")}
+          >
+            {isLoading ? "Proving..." : "Register"}
+          </Button>
+
+          <Button
+            type="submit"
+            disabled={isLoading}
+            onClick={() => setAction("verify")}
+          >
+            {isLoading ? "Proving..." : "Verify"}
+          </Button>
+        </form>
+      </Form>
+    </div>
   );
 }

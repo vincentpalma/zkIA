@@ -1,7 +1,10 @@
 import subprocess
 from flask import Flask, request
+from flask_cors import CORS
 
 app = Flask(__name__)
+cors = CORS(app)  # allow CORS for all domains on all routes
+app.config["CORS_HEADERS"] = "Content-Type"
 
 SIMPLE_IDENTITY_PATH = (
     "/home/vince/Documents/crypto/hackathon_bsa/examples/simple-identity"
@@ -31,6 +34,22 @@ def register_identity():
 
     result = subprocess.check_output(
         f"RISC0_DEV_MODE=1 cargo run -- register-identity {identity} {password}",
+        shell=True,
+        cwd=SIMPLE_IDENTITY_PATH,
+    )
+
+    print("result", result)
+    return result
+
+
+@app.route("/verifyIdentity", methods=["POST"])
+def verify_identity():
+    identity = request.json["identity"]
+    password = request.json["password"]
+    nonce = request.json["nonce"] if "nonce" in request.json else 0
+
+    result = subprocess.check_output(
+        f"RISC0_DEV_MODE=1 cargo run -- verify-identity {identity} {password} {nonce}",
         shell=True,
         cwd=SIMPLE_IDENTITY_PATH,
     )
