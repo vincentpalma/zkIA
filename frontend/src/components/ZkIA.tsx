@@ -19,6 +19,8 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useAuth } from "react-oidc-context";
 
+const DEBUG_WITH_SIMPLE_TOKEN = true;
+
 const formSchema = z.object({
   username: z.string().min(2, {
     message: "Username must be at least 2 characters.",
@@ -65,11 +67,14 @@ export function ZkIA() {
     console.log("submit", action);
 
     const identity = values.username + "." + "simple_identity";
-    // const password = values.password;// for simple token
-    const password =
+    let password =
       action == "register"
         ? auth.user?.access_token
         : values.password + " " + auth.user?.access_token; // convention from contract (if action is "linkPassword", format is "password jwt")
+
+    if (DEBUG_WITH_SIMPLE_TOKEN) {
+      password = values.password;
+    }
 
     setIsLoading(true);
 

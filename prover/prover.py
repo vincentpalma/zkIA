@@ -6,10 +6,6 @@ app = Flask(__name__)
 cors = CORS(app)  # allow CORS for all domains on all routes
 app.config["CORS_HEADERS"] = "Content-Type"
 
-# SIMPLE_IDENTITY_PATH = (
-#     "/home/vince/Documents/crypto/hackathon_bsa/examples/simple-identity"
-# )
-
 DEBUG_WITH_SIMPLE_IDENTITY = True
 
 if not DEBUG_WITH_SIMPLE_IDENTITY:
