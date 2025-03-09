@@ -48,6 +48,8 @@ Unpacks the two proofs.
 Verifies each proof with the correct verifier.
 Ensures consistency by checking the public data contained in the proofs to ensure they all relate to the same transaction.
 
+![Capture d’écran 2025-03-09 à 11 51 00](https://github.com/user-attachments/assets/470c7729-7850-4fb3-a01f-22f25bf5dbb7)
+![Capture d’écran 2025-03-09 à 11 50 53](https://github.com/user-attachments/assets/8970c9fd-2248-474e-ad2c-c4c858b83a22)
 
 ## Quickstart
 
