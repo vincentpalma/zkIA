@@ -192,7 +192,7 @@ impl IdentityContractState {
                 };
                 // splitting between password to set and jwt
                 // by convention we have that the first part will be the password
-                let parts: Vec<&str> = private_input.split(' ').collect();
+                let parts: Vec<&str> = private_input.split('|').collect();
                 let priv_pswd = parts[0];
                 let priv_jwt = parts[1];
 
@@ -237,9 +237,10 @@ impl IdentityContractState {
 
         match identification_method {
             IdentificationMethods::Email => {
-
-                match self.identities.get_mut(account).unwrap().emailAccountInfo.as_mut() {
-                    Some(stored_info) => {
+                println!("account = {account}");
+                println!("identities dict = {self.identities}");
+                match self.identities.get_mut(account).unwrap().emailAccountInfo {
+                    Some(ref mut stored_info) => {
                         if nonce != stored_info.nonce {
                             return Err("Invalid nonce");
                         }
