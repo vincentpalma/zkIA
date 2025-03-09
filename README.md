@@ -68,8 +68,6 @@ Ensures consistency by checking the public data contained in the proofs to ensur
 
 NOTE: since there is a problem with serialization that we didn't have time to fix, we use `examples/simple-identity` instead of the real contract and mock in the frontend to show the functionality. To use the real contact, fix `DEBUG_WITH_SIMPLE_IDENTITY` to `false` in `prover/prover.py`, `register_contract.py`, and `frontend/src/components/ZkIA.tsx`.
 
-SECOND NOTE: `simple_token` contract is broken, we didn't have time to fix it.
-
 ## References
 
 - [simple-identity example contract](https://github.com/Hyle-org/examples/blob/main/simple-identity)
