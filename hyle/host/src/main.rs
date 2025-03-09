@@ -50,7 +50,7 @@ enum Commands {
         identity: String,
         password: String,
         nonce: u32,
-        method: IdentificationMethods,
+        method: String,
     },
 }
 
@@ -188,7 +188,7 @@ async fn main() {
             nonce,
             method
         } => {
-            {
+            
                 let ia = match method.as_str() {
                     "email" => IdentificationMethods::Email,
                     "password" => IdentificationMethods::Password,
@@ -252,5 +252,4 @@ async fn main() {
                 println!("✅ Proof tx sent. Tx hash: {}", proof_tx_hash);
             }
         }
-    }
 }
