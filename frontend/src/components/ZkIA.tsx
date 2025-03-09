@@ -19,7 +19,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useAuth } from "react-oidc-context";
 
-const DEBUG_WITH_SIMPLE_TOKEN = true;
+const DEBUG_WITH_SIMPLE_TOKEN = false;
 
 const formSchema = z.object({
   username: z.string().min(2, {
